@@ -10,6 +10,8 @@ namespace NaijaCartApi.EntityFramework
             : base(options) { }
 
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Admin> Admins { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Cart> Carts { get; set; }
@@ -21,7 +23,5 @@ namespace NaijaCartApi.EntityFramework
 
             base.OnModelCreating(builder);
         }
-
-        public DbSet<NaijaCart.Api.Models.Address> Address { get; set; } = default!;
     }
 }

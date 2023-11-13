@@ -20,14 +20,14 @@ namespace NaijaCart.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Address>>> GetAddress()
         {
-          return await _context.Address.ToListAsync();
+          return await _context.Addresses.ToListAsync();
         }
 
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Address>> GetAddress(int id)
         {
-          var address = await _context.Address.FindAsync(id);
+          var address = await _context.Addresses.FindAsync(id);
 
             if (address == null)
             {
@@ -70,7 +70,7 @@ namespace NaijaCart.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Address>> PostAddress(Address address)
         {
-          _context.Address.Add(address);
+          _context.Addresses.Add(address);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetAddress", new { id = address.Id }, address);
@@ -79,13 +79,13 @@ namespace NaijaCart.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAddress(int id)
         {
-            var address = await _context.Address.FindAsync(id);
+            var address = await _context.Addresses.FindAsync(id);
             if (address == null)
             {
                 return NotFound();
             }
 
-            _context.Address.Remove(address);
+            _context.Addresses.Remove(address);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -93,7 +93,7 @@ namespace NaijaCart.Api.Controllers
 
         private bool AddressExists(int id)
         {
-            return (_context.Address?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Addresses?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
