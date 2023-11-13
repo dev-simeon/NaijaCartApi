@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NaijaCartApi.Models;
+using NaijaCart.Api.Models;
 
 namespace NaijaCartApi.EntityFramework
 {
@@ -17,7 +18,10 @@ namespace NaijaCartApi.EntityFramework
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(typeof(NaijaCartContext).Assembly);
+
             base.OnModelCreating(builder);
         }
+
+        public DbSet<NaijaCart.Api.Models.Address> Address { get; set; } = default!;
     }
 }
