@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NaijaCartApi.Models;
 using NaijaCart.Api.Models;
-
 namespace NaijaCartApi.EntityFramework
 {
     public partial class NaijaCartContext : DbContext
@@ -19,6 +18,9 @@ namespace NaijaCartApi.EntityFramework
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<Customer>()
+            .HasAlternateKey(c => c.Email);
+
             builder.ApplyConfigurationsFromAssembly(typeof(NaijaCartContext).Assembly);
 
             base.OnModelCreating(builder);

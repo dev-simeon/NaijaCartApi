@@ -5,7 +5,7 @@ namespace NaijaCartApi.Models
     public class Order
     {
         public int Id { get; set; }
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         public DateTime Date { get; set; }
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Total { get; set; }
