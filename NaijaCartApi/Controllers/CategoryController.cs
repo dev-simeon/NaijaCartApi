@@ -1,13 +1,17 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NaijaCartApi.EntityFramework;
 using NaijaCartApi.Models;
 
 namespace NaijaCart.Api.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
-
+    [ApiController]
     public class CategoryController : ControllerBase
     {
         private readonly NaijaCartContext _context;
@@ -17,53 +21,118 @@ namespace NaijaCart.Api.Controllers
             _context = context;
         }
 
+        // GET: api/Category
         [HttpGet]
-        public ActionResult GetCategories()
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
-            var categories = _context.Categories.ToList();
-            if (!categories.Any())
-                return NotFound();
-            return Ok(categories);
+          if (_context.Categories == null)
+          {
+              return NotFound();
+          }
+            return await _context.Categories.ToListAsync();
         }
 
+        // GET: api/Category/5
         [HttpGet("{id}")]
-        public ActionResult GetCategory(int id)
+        public async Task<ActionResult<Category>> GetCategory(string id)
         {
-            var category = _context.Categories.SingleOrDefault(c => c.Id == id);
+          if (_context.Categories == null)
+          {
+              return NotFound();
+          }
+            var category = await _context.Categories.FindAsync(id);
+
             if (category == null)
-                return BadRequest();
-            return Ok(category);
+            {
+                return NotFound();
+            }
+
+            return category;
         }
 
-        [HttpPost]
-        public ActionResult AddCustomer([FromBody] Category category)
-        {
-            _context.Categories.Add(category);
-            _context.SaveChanges();
-            return Created("", category);
-        }
-
+        // PUT: api/Category/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public ActionResult UpdateCustomer(int id, [FromBody] Category categoryUpdate)
+        public async Task<IActionResult> PutCategory(string id, Category category)
         {
-            var category = _context.Categories.SingleOrDefault(c => c.Id == id);
-            if (category == null)
+            if (id != category.Id)
+            {
                 return BadRequest();
-            category = categoryUpdate;
-            _context.Categories.Update(category);
-            _context.SaveChanges();
-            return Ok(category);
+            }
+
+            _context.Entry(category).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CategoryExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        public ActionResult DeleteCustomer(int id)
+        // POST: api/Category
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Category>> PostCategory(Category category)
         {
-            var category = _context.Categories.SingleOrDefault(c => c.Id == id);
+          if (_context.Categories == null)
+          {
+              return Problem("Entity set 'NaijaCartContext.Categories'  is null.");
+          }
+            _context.Categories.Add(category);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (CategoryExists(category.Id))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
+        }
+
+        // DELETE: api/Category/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCategory(string id)
+        {
+            if (_context.Categories == null)
+            {
+                return NotFound();
+            }
+            var category = await _context.Categories.FindAsync(id);
             if (category == null)
-                return BadRequest();
+            {
+                return NotFound();
+            }
+
             _context.Categories.Remove(category);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+
             return NoContent();
+        }
+
+        private bool CategoryExists(string id)
+        {
+            return (_context.Categories?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

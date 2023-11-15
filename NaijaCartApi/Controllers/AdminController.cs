@@ -1,66 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NaijaCart.Api.Models;
 using NaijaCartApi.EntityFramework;
-using NaijaCartApi.Models;
 
 namespace NaijaCart.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class AdminController : ControllerBase
     {
         private readonly NaijaCartContext _context;
 
-        public ProductController(NaijaCartContext context)
+        public AdminController(NaijaCartContext context)
         {
             _context = context;
         }
 
-        // GET: api/Product
+        // GET: api/Admin
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<Admin>>> GetAdmins()
         {
-          if (_context.Products == null)
+          if (_context.Admins == null)
           {
               return NotFound();
           }
-            return await _context.Products.ToListAsync();
+            return await _context.Admins.ToListAsync();
         }
 
-        // GET: api/Product/5
+        // GET: api/Admin/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(string id)
+        public async Task<ActionResult<Admin>> GetAdmin(string id)
         {
-          if (_context.Products == null)
+          if (_context.Admins == null)
           {
               return NotFound();
           }
-            var product = await _context.Products.FindAsync(id);
+            var admin = await _context.Admins.FindAsync(id);
 
-            if (product == null)
+            if (admin == null)
             {
                 return NotFound();
             }
 
-            return product;
+            return admin;
         }
 
-        // PUT: api/Product/5
+        // PUT: api/Admin/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(string id, Product product)
+        public async Task<IActionResult> PutAdmin(string id, Admin admin)
         {
-            if (id != product.Id)
+            if (id != admin.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(product).State = EntityState.Modified;
+            _context.Entry(admin).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +63,7 @@ namespace NaijaCart.Api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProductExists(id))
+                if (!AdminExists(id))
                 {
                     return NotFound();
                 }
@@ -81,23 +76,23 @@ namespace NaijaCart.Api.Controllers
             return NoContent();
         }
 
-        // POST: api/Product
+        // POST: api/Admin
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<Admin>> PostAdmin(Admin admin)
         {
-          if (_context.Products == null)
+          if (_context.Admins == null)
           {
-              return Problem("Entity set 'NaijaCartContext.Products'  is null.");
+              return Problem("Entity set 'NaijaCartContext.Admins'  is null.");
           }
-            _context.Products.Add(product);
+            _context.Admins.Add(admin);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (ProductExists(product.Id))
+                if (AdminExists(admin.Id))
                 {
                     return Conflict();
                 }
@@ -107,32 +102,32 @@ namespace NaijaCart.Api.Controllers
                 }
             }
 
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+            return CreatedAtAction("GetAdmin", new { id = admin.Id }, admin);
         }
 
-        // DELETE: api/Product/5
+        // DELETE: api/Admin/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct(string id)
+        public async Task<IActionResult> DeleteAdmin(string id)
         {
-            if (_context.Products == null)
+            if (_context.Admins == null)
             {
                 return NotFound();
             }
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
+            var admin = await _context.Admins.FindAsync(id);
+            if (admin == null)
             {
                 return NotFound();
             }
 
-            _context.Products.Remove(product);
+            _context.Admins.Remove(admin);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ProductExists(string id)
+        private bool AdminExists(string id)
         {
-            return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Admins?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

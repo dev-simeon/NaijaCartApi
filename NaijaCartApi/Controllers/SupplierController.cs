@@ -5,62 +5,62 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NaijaCart.Api.Models;
 using NaijaCartApi.EntityFramework;
-using NaijaCartApi.Models;
 
 namespace NaijaCart.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomerController : ControllerBase
+    public class SupplierController : ControllerBase
     {
         private readonly NaijaCartContext _context;
 
-        public CustomerController(NaijaCartContext context)
+        public SupplierController(NaijaCartContext context)
         {
             _context = context;
         }
 
-        // GET: api/Customer
+        // GET: api/Supplier
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
+        public async Task<ActionResult<IEnumerable<Supplier>>> GetSuppliers()
         {
-          if (_context.Customers == null)
+          if (_context.Suppliers == null)
           {
               return NotFound();
           }
-            return await _context.Customers.ToListAsync();
+            return await _context.Suppliers.ToListAsync();
         }
 
-        // GET: api/Customer/5
+        // GET: api/Supplier/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomer(string id)
+        public async Task<ActionResult<Supplier>> GetSupplier(string id)
         {
-          if (_context.Customers == null)
+          if (_context.Suppliers == null)
           {
               return NotFound();
           }
-            var customer = await _context.Customers.FindAsync(id);
+            var supplier = await _context.Suppliers.FindAsync(id);
 
-            if (customer == null)
+            if (supplier == null)
             {
                 return NotFound();
             }
 
-            return customer;
+            return supplier;
         }
 
-        // PUT: api/Customer/5
+        // PUT: api/Supplier/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCustomer(string id, Customer customer)
+        public async Task<IActionResult> PutSupplier(string id, Supplier supplier)
         {
-            if (id != customer.Id)
+            if (id != supplier.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(customer).State = EntityState.Modified;
+            _context.Entry(supplier).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +68,7 @@ namespace NaijaCart.Api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CustomerExists(id))
+                if (!SupplierExists(id))
                 {
                     return NotFound();
                 }
@@ -81,23 +81,23 @@ namespace NaijaCart.Api.Controllers
             return NoContent();
         }
 
-        // POST: api/Customer
+        // POST: api/Supplier
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
+        public async Task<ActionResult<Supplier>> PostSupplier(Supplier supplier)
         {
-          if (_context.Customers == null)
+          if (_context.Suppliers == null)
           {
-              return Problem("Entity set 'NaijaCartContext.Customers'  is null.");
+              return Problem("Entity set 'NaijaCartContext.Suppliers'  is null.");
           }
-            _context.Customers.Add(customer);
+            _context.Suppliers.Add(supplier);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (CustomerExists(customer.Id))
+                if (SupplierExists(supplier.Id))
                 {
                     return Conflict();
                 }
@@ -107,32 +107,32 @@ namespace NaijaCart.Api.Controllers
                 }
             }
 
-            return CreatedAtAction("GetCustomer", new { id = customer.Id }, customer);
+            return CreatedAtAction("GetSupplier", new { id = supplier.Id }, supplier);
         }
 
-        // DELETE: api/Customer/5
+        // DELETE: api/Supplier/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCustomer(string id)
+        public async Task<IActionResult> DeleteSupplier(string id)
         {
-            if (_context.Customers == null)
+            if (_context.Suppliers == null)
             {
                 return NotFound();
             }
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
+            var supplier = await _context.Suppliers.FindAsync(id);
+            if (supplier == null)
             {
                 return NotFound();
             }
 
-            _context.Customers.Remove(customer);
+            _context.Suppliers.Remove(supplier);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool CustomerExists(string id)
+        private bool SupplierExists(string id)
         {
-            return (_context.Customers?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Suppliers?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

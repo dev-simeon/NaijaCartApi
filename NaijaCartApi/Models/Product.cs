@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using NaijaCart.Api.Models;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace NaijaCartApi.Models
 {
@@ -12,6 +13,7 @@ namespace NaijaCartApi.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Key]
         public string Id { get; set; }
+        public string SupplierId {  get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         //[Column(TypeName = "decimal(10,2)")]
@@ -21,6 +23,8 @@ namespace NaijaCartApi.Models
         public string Image { get; set; }
         public DateTime DateCreated { get; set; }
 
+        public virtual ICollection<Review> Reviews { get; set; }
         public virtual Category Category { get; set; }
+        public virtual Supplier Supplier { get; set; }
     }
 }

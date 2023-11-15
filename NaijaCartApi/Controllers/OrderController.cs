@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NaijaCartApi.EntityFramework;
 using NaijaCartApi.Models;
@@ -16,16 +21,26 @@ namespace NaijaCart.Api.Controllers
             _context = context;
         }
 
+        // GET: api/Order
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
-          return await _context.Orders.ToListAsync();
+          if (_context.Orders == null)
+          {
+              return NotFound();
+          }
+            return await _context.Orders.ToListAsync();
         }
 
+        // GET: api/Order/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(int id)
         {
-          var order = await _context.Orders.FindAsync(id);
+          if (_context.Orders == null)
+          {
+              return NotFound();
+          }
+            var order = await _context.Orders.FindAsync(id);
 
             if (order == null)
             {
@@ -35,6 +50,8 @@ namespace NaijaCart.Api.Controllers
             return order;
         }
 
+        // PUT: api/Order/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOrder(int id, Order order)
         {
@@ -64,18 +81,29 @@ namespace NaijaCart.Api.Controllers
             return NoContent();
         }
 
+        // POST: api/Order
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Order>> PostOrder(Order order)
         {
+          if (_context.Orders == null)
+          {
+              return Problem("Entity set 'NaijaCartContext.Orders'  is null.");
+          }
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetOrder", new { id = order.Id }, order);
         }
 
+        // DELETE: api/Order/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
+            if (_context.Orders == null)
+            {
+                return NotFound();
+            }
             var order = await _context.Orders.FindAsync(id);
             if (order == null)
             {

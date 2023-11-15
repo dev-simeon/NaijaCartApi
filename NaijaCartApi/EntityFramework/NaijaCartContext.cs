@@ -9,18 +9,17 @@ namespace NaijaCartApi.EntityFramework
             : base(options) { }
 
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Review> Reviews { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Order> Orders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Customer>()
-            .HasAlternateKey(c => c.Email);
-
             builder.ApplyConfigurationsFromAssembly(typeof(NaijaCartContext).Assembly);
 
             base.OnModelCreating(builder);
